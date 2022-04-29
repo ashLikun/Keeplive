@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr format="color" name="SwipeRefreshLayout_Color1"/>
+    <attr format="color" name="SwipeRefreshLayout_Color2"/>
+    <attr format="color" name="SwipeRefreshLayout_Color3"/>
+    <attr format="color" name="SwipeRefreshLayout_Color4"/>
+    <dimen name="CardView_Margin">14dp</dimen>
+    <dimen name="CardView_Margin_4">8dp</dimen>
+    <dimen name="fab_margin_10">10dp</dimen>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!--<item name="android:buttonStyle">?android:attr/selectableItemBackground</item>-->
+        <!--<item name="android:requiresFadingEdge">vertical</item>-->
+        <!--<item name="android:requiresFadingEdge">vertical</item>-->
+
+
+        <item name="SwipeRefreshLayout_Color1">@color/colorPrimary</item>
+        <item name="SwipeRefreshLayout_Color2">#ffEA4335</item>
+        <item name="SwipeRefreshLayout_Color3">#ff34A853</item>
+        <item name="SwipeRefreshLayout_Color4">#ffFBBC05</item>
+
+    </style>
+</resources>

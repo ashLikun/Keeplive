@@ -1,0 +1,18 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!--<item name="android:buttonStyle">@null</item>-->
+        <!--<item name="android:requiresFadingEdge">vertical</item>-->
+
+        <item name="SwipeRefreshLayout_Color1">@color/colorPrimary</item>
+        <item name="SwipeRefreshLayout_Color2">#ffEA4335</item>
+        <item name="SwipeRefreshLayout_Color3">#ff34A853</item>
+        <item name="SwipeRefreshLayout_Color4">#ffFBBC05</item>
+    </style>
+
+</resources>
