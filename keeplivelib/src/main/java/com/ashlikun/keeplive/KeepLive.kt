@@ -55,14 +55,24 @@ object KeepLive {
      * 1:先检查是否可以关闭电池优化
      * 2：未关闭就使用备选的方案，一像素，守护进程，无声音乐
      * 3：启动后要在结束的地方调用 stopWork 方法
+     *
+     * @param successForeground 关闭了电池优化后是否开启前台服务
      */
-    fun start(activity: ComponentActivity, foregroundNotification: ForegroundNotification) {
+    fun start(activity: ComponentActivity, successForeground: Boolean = true, foregroundNotification: ForegroundNotification,) {
         activity.ignoreBattery {
             if (!it) {
                 //电池优化 启动失败，是有备选方案
                 startWork(activity.application, foregroundNotification)
             } else {
-                stopWork(activity.application)
+                if (successForeground) {
+                    useSilenceMusice = false
+                    musiceReplay = false
+                    remoteEnable = false
+                    startWork(activity.application, foregroundNotification)
+                } else {
+                    stopWork(activity.application)
+                }
+
             }
         }
     }
