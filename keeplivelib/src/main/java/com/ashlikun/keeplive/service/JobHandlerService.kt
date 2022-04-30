@@ -31,8 +31,14 @@ class JobHandlerService : JobService() {
     private val jobId = 100
     val stopReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            mJobScheduler?.cancel(jobId)
-            mJobScheduler = null
+            runCatching {
+                mJobScheduler?.cancel(jobId)
+                mJobScheduler = null
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    stopForeground(KeepLive.notificationId)
+                }
+                stopSelf()
+            }
         }
     }
 

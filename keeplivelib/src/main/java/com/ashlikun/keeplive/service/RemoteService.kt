@@ -16,14 +16,19 @@ import com.ashlikun.keeplive.utils.ServiceUtils
  * 创建时间: 2022/4/30 0:03
  * 邮箱　　：496546144@qq.com
  *
- * 功能介绍：守护进程
+ * 功能介绍：守护进程 双进程保活，6.0之前
  */
 class RemoteService : Service() {
     private val mBilder: MyBilder = MyBilder()
     private var mIsBoundLocalService = false
     val stopReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            stopSelf()
+            runCatching {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    stopForeground(KeepLive.notificationId)
+                }
+                stopSelf()
+            }
         }
     }
 

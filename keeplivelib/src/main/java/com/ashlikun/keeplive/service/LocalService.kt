@@ -48,7 +48,12 @@ class LocalService : Service() {
 
     val stopReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            stopSelf()
+            runCatching {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    stopForeground(KeepLive.notificationId)
+                }
+                stopSelf()
+            }
         }
     }
 

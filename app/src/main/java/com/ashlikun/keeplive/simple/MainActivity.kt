@@ -3,6 +3,8 @@ package com.ashlikun.keeplive.simple
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.ashlikun.keeplive.KeepLive
+import com.ashlikun.keeplive.config.ForegroundNotification
 import com.ashlikun.keeplive.simple.databinding.MainViewgroupActivityBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -30,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     var startTime = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        KeepLive.start(this, ForegroundNotification("测试Keep", "描述", R.mipmap.ic_launcher))
         setContentView(binding.root)
         startTime = getFormatTime(Calendar.getInstance())
         binding.textView.text = "开始时间：${startTime}"

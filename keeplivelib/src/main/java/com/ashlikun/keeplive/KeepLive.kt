@@ -6,8 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Process
+import androidx.activity.ComponentActivity
 import com.ashlikun.keeplive.config.ForegroundNotification
-import com.ashlikun.keeplive.config.KeepLiveService
 import com.ashlikun.keeplive.service.JobHandlerService
 import com.ashlikun.keeplive.service.LocalService
 import com.ashlikun.keeplive.service.RemoteService
@@ -39,33 +39,47 @@ object KeepLive {
     var onStopCall: KeepLiveCall? = null
 
     //是否启用无声音乐  * 如不设置，则默认启用
-    var useSilenceMusice = false
+    var useSilenceMusice = true
 
     //音乐是否重复播放流氓模式  相对耗电，但可造就不死之身
-    var musiceReplay = false
+    var musiceReplay = true
 
-    //是否开启像素保活
-    var onepx = false
+    //是否开启像素保活 QQ 的 1 像素（可以使进程的优先级在屏幕锁屏时间由4提升为最高优先级1
+    var onepx = true
 
-    //是否开启守护进程
+    //是否开启守护进程 双进程保活，6.0之前
     var remoteEnable = true
 
     /**
      * 启动保活
+     * 1:先检查是否可以关闭电池优化
+     * 2：未关闭就使用备选的方案，一像素，守护进程，无声音乐
+     * 3：启动后要在结束的地方调用 stopWork 方法
+     */
+    fun start(activity: ComponentActivity, foregroundNotification: ForegroundNotification) {
+        activity.ignoreBattery {
+            if (!it) {
+                //电池优化 启动失败，是有备选方案
+                startWork(activity.application, foregroundNotification)
+            } else {
+                stopWork(activity.application)
+            }
+        }
+    }
+
+    /**
+     * 启动保活
+     * 未打开电池优化或者自启动的使用这个方法
      *
      * @param application            your application
      * @param foregroundNotification 前台服务 必须要，安卓8.0后必须有前台通知才能正常启动Service
      * @param keepLiveService        保活业务
      */
     fun startWork(application: Application,
-        foregroundNotification: ForegroundNotification,
-        onWorkingCall: KeepLiveCall? = null,
-        onStopCall: KeepLiveCall? = null) {
+        foregroundNotification: ForegroundNotification) {
         if (isMain(application)) {
             isStart = true
             KeepLive.foregroundNotification = foregroundNotification
-            KeepLive.onWorkingCall = onWorkingCall
-            KeepLive.onStopCall = onStopCall
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 //启动定时器，在定时器中启动本地服务和守护进程
                 val intent = Intent(application, JobHandlerService::class.java)

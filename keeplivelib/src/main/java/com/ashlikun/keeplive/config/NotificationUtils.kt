@@ -32,12 +32,16 @@ class NotificationUtils private constructor(private val context: Context) : Cont
     fun createNotificationChannel() {
         if (channel == null) {
             channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
-            channel!!.enableVibration(false)
-            channel!!.enableLights(false)
-            channel!!.enableVibration(false)
-            channel!!.vibrationPattern = longArrayOf(0)
-            channel!!.setSound(null, null)
-            manager!!.createNotificationChannel(channel!!)
+                .apply {
+                    setShowBadge(false)
+                    enableVibration(false)
+                    enableLights(false)
+                    enableVibration(false)
+                    importance = NotificationManager.IMPORTANCE_MIN
+                    vibrationPattern = longArrayOf(0)
+                    setSound(null, null)
+                    manager!!.createNotificationChannel(this)
+                }
         }
     }
 
@@ -49,6 +53,8 @@ class NotificationUtils private constructor(private val context: Context) : Cont
             .setContentTitle(title)
             .setContentText(content)
             .setSmallIcon(icon)
+            .setCategory(Notification.CATEGORY_SERVICE)
+            .setVisibility(Notification.VISIBILITY_SECRET)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
     }
@@ -61,6 +67,7 @@ class NotificationUtils private constructor(private val context: Context) : Cont
             .setContentText(content)
             .setSmallIcon(icon)
             .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_MIN)
             .setVibrate(longArrayOf(0))
             .setContentIntent(pendingIntent)
     }
