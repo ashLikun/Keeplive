@@ -44,8 +44,6 @@ object KeepLive {
     //音乐是否重复播放流氓模式  相对耗电，但可造就不死之身
     var musiceReplay = true
 
-    //是否开启像素保活 QQ 的 1 像素（可以使进程的优先级在屏幕锁屏时间由4提升为最高优先级1
-    var onepx = true
 
     //是否开启守护进程 双进程保活，6.0之前
     var remoteEnable = true

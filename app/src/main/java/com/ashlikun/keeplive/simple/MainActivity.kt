@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     var startTime = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        KeepLive.start(this, ForegroundNotification("测试Keep", "描述", R.mipmap.ic_launcher))
+        KeepLive.start(this, true, ForegroundNotification("测试Keep", "描述", R.mipmap.ic_launcher))
         setContentView(binding.root)
         startTime = getFormatTime(Calendar.getInstance())
         binding.textView.text = "开始时间：${startTime}"
