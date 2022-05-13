@@ -103,4 +103,11 @@ class JobHandlerService : JobService() {
         }
         return false
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        runCatching {
+            unregisterReceiver(stopReceiver)
+        }
+    }
 }
