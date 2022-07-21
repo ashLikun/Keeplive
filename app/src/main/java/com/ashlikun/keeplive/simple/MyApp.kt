@@ -1,14 +1,7 @@
 package com.ashlikun.keeplive.simple
 
 import android.app.Application
-import android.util.Log
-import com.ashlikun.keeplive.KeepLive
-import com.ashlikun.keeplive.config.ForegroundNotification
-import com.ashlikun.keeplive.config.KeepLiveService
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 /**
