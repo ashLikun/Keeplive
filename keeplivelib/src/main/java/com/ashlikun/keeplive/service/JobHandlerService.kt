@@ -42,7 +42,7 @@ class JobHandlerService : JobService() {
         }
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         this.startService(this)
         registerReceiver(stopReceiver, IntentFilter().apply {
             addAction(KeepLive.RECEIVER_KEEP_STOP)
@@ -86,7 +86,7 @@ class JobHandlerService : JobService() {
         }
     }
 
-    override fun onStartJob(jobParameters: JobParameters): Boolean {
+    override fun onStartJob(jobParameters: JobParameters?): Boolean {
         if (!ServiceUtils.isServiceRunning(this.applicationContext, LocalService::class.java.name) ||
             !ServiceUtils.isRunningTaskExist(this.applicationContext, this.packageName + ":remote")
         ) {
@@ -95,7 +95,7 @@ class JobHandlerService : JobService() {
         return false
     }
 
-    override fun onStopJob(jobParameters: JobParameters): Boolean {
+    override fun onStopJob(jobParameters: JobParameters?): Boolean {
         if (!ServiceUtils.isServiceRunning(this.applicationContext,
                 LocalService::class.java.name) || !ServiceUtils.isRunningTaskExist(this.applicationContext, this.packageName + ":remote")
         ) {

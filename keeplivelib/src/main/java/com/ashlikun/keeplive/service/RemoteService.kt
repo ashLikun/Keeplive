@@ -32,11 +32,11 @@ class RemoteService : Service() {
         }
     }
 
-    override fun onBind(intent: Intent): IBinder? {
+    override fun onBind(intent: Intent?): IBinder? {
         return mBilder
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         registerReceiver(stopReceiver, IntentFilter().apply {
             addAction(KeepLive.RECEIVER_KEEP_STOP)
         })
@@ -73,7 +73,7 @@ class RemoteService : Service() {
 
     private val connection = object : ServiceConnection {
         //方法onServiceDisconnected() 在连接正常关闭的情况下是不会被调用的, 该方法只在Service 被破坏了或者被杀死的时候调用. 例如, 系统资源不足, 要关闭一些Services, 刚好连接绑定的 Service 是被关闭者之一,  这个时候onServiceDisconnected() 就会被调用。
-        override fun onServiceDisconnected(name: ComponentName) {
+        override fun onServiceDisconnected(name: ComponentName?) {
             if (ServiceUtils.isRunningTaskExist(applicationContext, "$packageName:remote")) {
                 startService(Intent(this@RemoteService, LocalService::class.java))
                 mIsBoundLocalService = bindService(Intent(this@RemoteService,
@@ -83,6 +83,6 @@ class RemoteService : Service() {
             sendBroadcast(Intent(if (pm.isScreenOn) "_ACTION_SCREEN_ON" else "_ACTION_SCREEN_OFF"))
         }
 
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {}
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {}
     }
 }

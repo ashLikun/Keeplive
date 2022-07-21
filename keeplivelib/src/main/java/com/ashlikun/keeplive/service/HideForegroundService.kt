@@ -20,7 +20,7 @@ import com.ashlikun.keeplive.receiver.NotificationClickReceiver
  */
 class HideForegroundService : Service() {
     private val handler = Handler(Looper.getMainLooper())
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground()
         handler.postDelayed({
             stopForeground(true)
@@ -42,7 +42,7 @@ class HideForegroundService : Service() {
         }
     }
 
-    override fun onBind(intent: Intent): IBinder? {
+    override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 }

@@ -19,8 +19,8 @@ class NotificationClickReceiver : BroadcastReceiver() {
         const val CLICK_NOTIFICATION = "CLICK_NOTIFICATION"
     }
 
-    override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == CLICK_NOTIFICATION) {
+    override fun onReceive(context: Context, intent: Intent?) {
+        if (intent?.action == CLICK_NOTIFICATION) {
             KeepLive.foregroundNotification?.clickListener?.invoke(context, intent)
         }
     }

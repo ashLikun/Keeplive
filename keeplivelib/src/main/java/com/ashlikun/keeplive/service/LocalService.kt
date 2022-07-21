@@ -25,11 +25,11 @@ class LocalService : Service() {
 
     //屏幕点亮状态监听，用于单独控制音乐播放
     private val screenStateReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == "_ACTION_SCREEN_OFF") {
+        override fun onReceive(context: Context, intent: Intent?) {
+            if (intent?.action == "_ACTION_SCREEN_OFF") {
                 isPause = false
                 play()
-            } else if (intent.action == "_ACTION_SCREEN_ON") {
+            } else if (intent?.action == "_ACTION_SCREEN_ON") {
                 isPause = true
                 pause()
             }
@@ -57,7 +57,7 @@ class LocalService : Service() {
         }
     }
 
-    override fun onBind(intent: Intent): IBinder? {
+    override fun onBind(intent: Intent?): IBinder? {
         return mBilder
     }
 
@@ -87,7 +87,7 @@ class LocalService : Service() {
         }
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         registerReceiver(stopReceiver, IntentFilter().apply {
             addAction(KeepLive.RECEIVER_KEEP_STOP)
         })
@@ -156,7 +156,7 @@ class LocalService : Service() {
 
     private val connection = object : ServiceConnection {
         //方法onServiceDisconnected() 在连接正常关闭的情况下是不会被调用的, 该方法只在Service 被破坏了或者被杀死的时候调用. 例如, 系统资源不足, 要关闭一些Services, 刚好连接绑定的 Service 是被关闭者之一,  这个时候onServiceDisconnected() 就会被调用。
-        override fun onServiceDisconnected(name: ComponentName) {
+        override fun onServiceDisconnected(name: ComponentName?) {
             if (ServiceUtils.isServiceRunning(applicationContext, LocalService::class.java.name)) {
                 startService(Intent(this@LocalService, RemoteService::class.java))
                 mIsBoundRemoteService = bindService(Intent(this@LocalService, RemoteService::class.java), this, BIND_ABOVE_CLIENT)
@@ -166,7 +166,7 @@ class LocalService : Service() {
         }
 
         //服务开启
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             try {
                 KeepLive.foregroundNotification?.apply {
                     val guardAidl = GuardAidl.Stub.asInterface(service)
