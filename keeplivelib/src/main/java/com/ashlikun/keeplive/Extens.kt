@@ -47,7 +47,7 @@ private fun <I, O> ComponentActivity.registerForActivityResultX(
 /**
  * 是否忽略电池优化白名单
  */
-fun Context.isIgnoringBatteryOptimizations() = runCatching {
+private fun Context.isIgnoringBatteryOptimizations() = runCatching {
     val pm = applicationContext.getSystemService(Activity.POWER_SERVICE) as PowerManager
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         pm.isIgnoringBatteryOptimizations(packageName)
@@ -60,7 +60,7 @@ fun Context.isIgnoringBatteryOptimizations() = runCatching {
  * @param hook 在启动弹窗或者跳转页面前，允许插入你的代码
  * @param result 结果
  */
-fun ComponentActivity.ignoreBattery(isToList: Boolean = false, hook: ((run: () -> Unit) -> Unit)? = null, result: ((Boolean) -> Unit)? = null) {
+internal fun ComponentActivity.ignoreBattery(isToList: Boolean = false, hook: ((run: () -> Unit) -> Unit)? = null, result: ((Boolean) -> Unit)? = null) {
     runCatching {
         if (isIgnoringBatteryOptimizations()) result?.invoke(true)
         else {

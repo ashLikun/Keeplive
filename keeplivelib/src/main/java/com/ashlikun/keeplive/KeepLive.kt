@@ -56,7 +56,7 @@ object KeepLive {
      *
      * @param successForeground 关闭了电池优化后是否开启前台服务
      */
-    fun start(activity: ComponentActivity, successForeground: Boolean = true, foregroundNotification: ForegroundNotification,) {
+    fun start(activity: ComponentActivity, successForeground: Boolean = true, foregroundNotification: ForegroundNotification) {
         activity.ignoreBattery {
             if (!it) {
                 //电池优化 启动失败，是有备选方案
@@ -70,7 +70,6 @@ object KeepLive {
                 } else {
                     stopWork(activity.application)
                 }
-
             }
         }
     }
@@ -84,7 +83,7 @@ object KeepLive {
      * @param keepLiveService        保活业务
      */
     fun startWork(application: Application,
-        foregroundNotification: ForegroundNotification) {
+                  foregroundNotification: ForegroundNotification) {
         if (isMain(application)) {
             isStart = true
             KeepLive.foregroundNotification = foregroundNotification
