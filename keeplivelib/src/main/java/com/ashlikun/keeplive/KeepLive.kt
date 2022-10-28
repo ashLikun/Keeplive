@@ -2,6 +2,7 @@ package com.ashlikun.keeplive
 
 import android.app.ActivityManager
 import android.app.Application
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -18,7 +19,7 @@ import com.ashlikun.keeplive.service.RemoteService
 /**
  * 保活工具
  */
-typealias KeepLiveCall = () -> Unit
+typealias KeepLiveCall = (service:Service) -> Unit
 
 object KeepLive {
     const val RECEIVER_KEEP_STOP = "_KEEP_STOP"

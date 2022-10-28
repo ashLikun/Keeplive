@@ -90,10 +90,8 @@ class JobHandlerService : JobService() {
     }
 
     override fun onStopJob(jobParameters: JobParameters?): Boolean {
-        if (!ServiceUtils.isServiceRunning(
-                this.applicationContext,
-                LocalService::class.java.name
-            ) || !ServiceUtils.isRunningTaskExist(this.applicationContext, this.packageName + ":remote")
+        if (!ServiceUtils.isServiceRunning(this.applicationContext, LocalService::class.java.name) ||
+            !ServiceUtils.isRunningTaskExist(this.applicationContext, this.packageName + ":remote")
         ) {
             this.startService(this)
         }

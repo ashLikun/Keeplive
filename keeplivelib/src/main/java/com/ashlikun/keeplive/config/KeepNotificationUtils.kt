@@ -45,7 +45,7 @@ class KeepNotificationUtils private constructor(private val context: Context) : 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    fun getChannelNotification(title: String?, content: String?, icon: Int, intent: Intent?): NotificationCompat.Builder {
+    fun getChannelNotification(title: String, content: String, icon: Int, intent: Intent): NotificationCompat.Builder {
         //PendingIntent.FLAG_UPDATE_CURRENT 这个类型才能传值
         val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         return NotificationCompat.Builder(context, id)
@@ -58,7 +58,7 @@ class KeepNotificationUtils private constructor(private val context: Context) : 
             .setContentIntent(pendingIntent)
     }
 
-    fun getNotification_25(title: String?, content: String?, icon: Int, intent: Intent?): NotificationCompat.Builder {
+    fun getNotification_25(title: String, content: String, icon: Int, intent: Intent): NotificationCompat.Builder {
         //PendingIntent.FLAG_UPDATE_CURRENT 这个类型才能传值
         val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         return NotificationCompat.Builder(context, id)

@@ -113,7 +113,7 @@ class LocalService : Service() {
             } catch (e: Exception) {
             }
         }
-        KeepLive.onWorkingCall?.invoke()
+        KeepLive.onWorkingCall?.invoke(this)
         return START_STICKY
     }
 
@@ -178,6 +178,6 @@ class LocalService : Service() {
             unregisterReceiver(screenStateReceiver)
         } catch (e: Exception) {
         }
-        KeepLive.onStopCall?.invoke()
+        KeepLive.onStopCall?.invoke(this)
     }
 }
