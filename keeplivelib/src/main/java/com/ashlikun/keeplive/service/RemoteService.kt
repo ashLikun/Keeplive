@@ -7,7 +7,7 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.os.RemoteException
 import com.ashlikun.keeplive.KeepLive
-import com.ashlikun.keeplive.config.NotificationUtils.Companion.createNotification
+import com.ashlikun.keeplive.config.KeepNotificationUtils.Companion.createNotification
 import com.ashlikun.keeplive.receiver.NotificationClickReceiver
 import com.ashlikun.keeplive.utils.ServiceUtils
 
@@ -66,7 +66,7 @@ class RemoteService : Service() {
                     Intent(applicationContext, NotificationClickReceiver::class.java).apply {
                         action = NotificationClickReceiver.CLICK_NOTIFICATION
                     })
-                this@RemoteService.startForeground(KeepLive.notificationId, notification)
+                this@RemoteService.startForeground(KeepLive.notificationId, notification.build())
             }
         }
     }
@@ -76,8 +76,12 @@ class RemoteService : Service() {
         override fun onServiceDisconnected(name: ComponentName?) {
             if (ServiceUtils.isRunningTaskExist(applicationContext, "$packageName:remote")) {
                 startService(Intent(this@RemoteService, LocalService::class.java))
-                mIsBoundLocalService = bindService(Intent(this@RemoteService,
-                    LocalService::class.java), this, BIND_ABOVE_CLIENT)
+                mIsBoundLocalService = bindService(
+                    Intent(
+                        this@RemoteService,
+                        LocalService::class.java
+                    ), this, BIND_ABOVE_CLIENT
+                )
             }
             val pm = applicationContext.getSystemService(POWER_SERVICE) as PowerManager
             sendBroadcast(Intent(if (pm.isScreenOn) "_ACTION_SCREEN_ON" else "_ACTION_SCREEN_OFF"))

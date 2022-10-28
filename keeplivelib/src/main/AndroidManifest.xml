@@ -20,7 +20,6 @@
             android:theme="@style/onePixelActivity" />
 
         <service android:name="com.ashlikun.keeplive.service.LocalService" />
-        <service android:name="com.ashlikun.keeplive.service.HideForegroundService" />
         <service
             android:name="com.ashlikun.keeplive.service.JobHandlerService"
             android:permission="android.permission.BIND_JOB_SERVICE" />

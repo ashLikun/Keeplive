@@ -1,6 +1,5 @@
 package com.ashlikun.keeplive.config
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -10,7 +9,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import java.util.*
+import com.ashlikun.keeplive.KeepLive
 
 /**
  * @author　　: 李坤
@@ -20,7 +19,7 @@ import java.util.*
  * 功能介绍：通知的工具
  */
 
-class NotificationUtils private constructor(private val context: Context) : ContextWrapper(context) {
+class KeepNotificationUtils private constructor(private val context: Context) : ContextWrapper(context) {
     private val manager by lazy {
         getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
@@ -46,15 +45,15 @@ class NotificationUtils private constructor(private val context: Context) : Cont
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    fun getChannelNotification(title: String?, content: String?, icon: Int, intent: Intent?): Notification.Builder {
+    fun getChannelNotification(title: String?, content: String?, icon: Int, intent: Intent?): NotificationCompat.Builder {
         //PendingIntent.FLAG_UPDATE_CURRENT 这个类型才能传值
         val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        return Notification.Builder(context, id)
+        return NotificationCompat.Builder(context, id)
             .setContentTitle(title)
             .setContentText(content)
             .setSmallIcon(icon)
-            .setCategory(Notification.CATEGORY_SERVICE)
-            .setVisibility(Notification.VISIBILITY_SECRET)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
+            .setVisibility(NotificationCompat.VISIBILITY_SECRET)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
     }
@@ -73,28 +72,18 @@ class NotificationUtils private constructor(private val context: Context) : Cont
     }
 
     companion object {
-        fun sendNotification(context: Context, title: String, content: String, icon: Int, intent: Intent) {
-            val notificationUtils = NotificationUtils(context)
-            var notification: Notification? = null
-            notification = if (Build.VERSION.SDK_INT >= 26) {
-                notificationUtils.createNotificationChannel()
-                notificationUtils.getChannelNotification(title, content, icon, intent).build()
-            } else {
-                notificationUtils.getNotification_25(title, content, icon, intent).build()
-            }
-            notificationUtils.manager!!.notify(Random().nextInt(10000), notification)
-        }
 
         @JvmStatic
-        fun createNotification(context: Context, title: String, content: String, icon: Int, intent: Intent): Notification {
-            val notificationUtils = NotificationUtils(context)
-            var notification: Notification? = null
+        fun createNotification(context: Context, title: String, content: String, icon: Int, intent: Intent): NotificationCompat.Builder {
+            val notificationUtils = KeepNotificationUtils(context)
+            var notification: NotificationCompat.Builder? = null
             notification = if (Build.VERSION.SDK_INT >= 26) {
                 notificationUtils.createNotificationChannel()
-                notificationUtils.getChannelNotification(title, content, icon, intent).build()
+                notificationUtils.getChannelNotification(title, content, icon, intent)
             } else {
-                notificationUtils.getNotification_25(title, content, icon, intent).build()
+                notificationUtils.getNotification_25(title, content, icon, intent)
             }
+            KeepLive.createNotificationCall?.invoke(notification)
             return notification
         }
     }

@@ -13,8 +13,6 @@ import android.os.Build
 import android.os.Build.VERSION
 import androidx.annotation.RequiresApi
 import com.ashlikun.keeplive.KeepLive
-import com.ashlikun.keeplive.config.NotificationUtils.Companion.createNotification
-import com.ashlikun.keeplive.receiver.NotificationClickReceiver
 import com.ashlikun.keeplive.utils.ServiceUtils
 
 /**
@@ -72,13 +70,9 @@ class JobHandlerService : JobService() {
 
     private fun startService(context: Context) {
         if (KeepLive.isStart) {
-            if (VERSION.SDK_INT >= Build.VERSION_CODES.O && KeepLive.foregroundNotification != null) {
-                val notification = createNotification(this,
-                    KeepLive.foregroundNotification!!.title,
-                    KeepLive.foregroundNotification!!.description,
-                    KeepLive.foregroundNotification!!.iconRes,
-                    Intent(this.applicationContext, NotificationClickReceiver::class.java).apply { action = "CLICK_NOTIFICATION" })
-                this.startForeground(KeepLive.notificationId, notification)
+            //启用前台服务，提升优先级
+            KeepLive.createNot(this)?.apply {
+                startForeground(KeepLive.notificationId, build())
             }
             this.startService(Intent(context, LocalService::class.java))
             if (KeepLive.remoteEnable)
@@ -96,8 +90,10 @@ class JobHandlerService : JobService() {
     }
 
     override fun onStopJob(jobParameters: JobParameters?): Boolean {
-        if (!ServiceUtils.isServiceRunning(this.applicationContext,
-                LocalService::class.java.name) || !ServiceUtils.isRunningTaskExist(this.applicationContext, this.packageName + ":remote")
+        if (!ServiceUtils.isServiceRunning(
+                this.applicationContext,
+                LocalService::class.java.name
+            ) || !ServiceUtils.isRunningTaskExist(this.applicationContext, this.packageName + ":remote")
         ) {
             this.startService(this)
         }

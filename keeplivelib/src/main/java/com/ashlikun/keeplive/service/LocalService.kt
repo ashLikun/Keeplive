@@ -6,7 +6,6 @@ import android.media.MediaPlayer
 import android.os.*
 import com.ashlikun.keeplive.KeepLive
 import com.ashlikun.keeplive.R
-import com.ashlikun.keeplive.config.NotificationUtils.Companion.createNotification
 import com.ashlikun.keeplive.receiver.NotificationClickReceiver
 import com.ashlikun.keeplive.receiver.OnepxReceiver
 import com.ashlikun.keeplive.utils.ServiceUtils
@@ -104,14 +103,8 @@ class LocalService : Service() {
             addAction("_ACTION_SCREEN_ON")
         })
         //启用前台服务，提升优先级
-        KeepLive.foregroundNotification?.apply {
-            if (KeepLive.foregroundNotification != null) {
-                val notification = createNotification(this@LocalService, title, description, iconRes,
-                    Intent(applicationContext, NotificationClickReceiver::class.java).apply {
-                        action = NotificationClickReceiver.CLICK_NOTIFICATION
-                    })
-                startForeground(KeepLive.notificationId, notification)
-            }
+        KeepLive.createNot(this)?.apply {
+            startForeground(KeepLive.notificationId, build())
         }
         //绑定守护进程
         if (KeepLive.remoteEnable) {
@@ -119,13 +112,6 @@ class LocalService : Service() {
                 mIsBoundRemoteService = this.bindService(Intent(this, RemoteService::class.java), connection, BIND_ABOVE_CLIENT)
             } catch (e: Exception) {
             }
-        }
-        //隐藏服务通知
-        try {
-            if (Build.VERSION.SDK_INT < 25) {
-                startService(Intent(this, HideForegroundService::class.java))
-            }
-        } catch (e: Exception) {
         }
         KeepLive.onWorkingCall?.invoke()
         return START_STICKY

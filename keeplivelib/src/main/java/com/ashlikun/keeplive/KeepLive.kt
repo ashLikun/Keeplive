@@ -7,7 +7,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.Process
 import androidx.activity.ComponentActivity
+import androidx.core.app.NotificationCompat
 import com.ashlikun.keeplive.config.ForegroundNotification
+import com.ashlikun.keeplive.config.KeepNotificationUtils
+import com.ashlikun.keeplive.receiver.NotificationClickReceiver
 import com.ashlikun.keeplive.service.JobHandlerService
 import com.ashlikun.keeplive.service.LocalService
 import com.ashlikun.keeplive.service.RemoteService
@@ -24,6 +27,11 @@ object KeepLive {
     var isStart = false
 
     var foregroundNotification: ForegroundNotification? = null
+
+    //创建前提通知时候的回调，方便外部进行特殊设置
+    var createNotificationCall: ((NotificationCompat.Builder) -> Unit)? = null
+
+    //通知id
     var notificationId = 13691
 
     /**
@@ -47,6 +55,17 @@ object KeepLive {
 
     //是否开启守护进程 双进程保活，6.0之前
     var remoteEnable = true
+
+    /**
+     * 创建foregroundNotification 对应的通知栏Builder
+     * 前提foregroundNotification 不为null
+     */
+    fun createNot(context: Context) =
+        if (foregroundNotification == null) null else KeepNotificationUtils.createNotification(context,
+            foregroundNotification!!.title,
+            foregroundNotification!!.description,
+            foregroundNotification!!.iconRes,
+            Intent(context.applicationContext, NotificationClickReceiver::class.java).apply { action = NotificationClickReceiver.CLICK_NOTIFICATION })
 
     /**
      * 启动保活
@@ -82,8 +101,10 @@ object KeepLive {
      * @param foregroundNotification 前台服务 必须要，安卓8.0后必须有前台通知才能正常启动Service
      * @param keepLiveService        保活业务
      */
-    fun startWork(application: Application,
-                  foregroundNotification: ForegroundNotification) {
+    fun startWork(
+        application: Application,
+        foregroundNotification: ForegroundNotification
+    ) {
         if (isMain(application)) {
             isStart = true
             KeepLive.foregroundNotification = foregroundNotification
