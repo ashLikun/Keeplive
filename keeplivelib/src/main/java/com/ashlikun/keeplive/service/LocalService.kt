@@ -7,7 +7,6 @@ import android.os.*
 import android.util.Log
 import com.ashlikun.keeplive.KeepLive
 import com.ashlikun.keeplive.R
-import com.ashlikun.keeplive.receiver.NotificationClickReceiver
 import com.ashlikun.keeplive.receiver.OnepxReceiver
 import com.ashlikun.keeplive.utils.ServiceUtils
 
