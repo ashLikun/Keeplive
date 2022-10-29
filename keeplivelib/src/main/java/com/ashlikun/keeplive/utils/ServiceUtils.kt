@@ -2,6 +2,8 @@ package com.ashlikun.keeplive.utils
 
 import android.app.ActivityManager
 import android.content.Context
+import android.content.pm.PackageManager
+import android.util.Log
 
 object ServiceUtils {
     fun isServiceRunning(ctx: Context, className: String): Boolean {
@@ -33,4 +35,5 @@ object ServiceUtils {
         }
         return false
     }
+
 }

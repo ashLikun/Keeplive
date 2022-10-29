@@ -10,6 +10,7 @@ import android.os.Process
 import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationCompat
 import com.ashlikun.keeplive.config.ForegroundNotification
+import com.ashlikun.keeplive.config.ForegroundNotificationClickListener
 import com.ashlikun.keeplive.config.KeepNotificationUtils
 import com.ashlikun.keeplive.receiver.NotificationClickReceiver
 import com.ashlikun.keeplive.service.JobHandlerService
@@ -19,7 +20,7 @@ import com.ashlikun.keeplive.service.RemoteService
 /**
  * 保活工具
  */
-typealias KeepLiveCall = (service:Service) -> Unit
+typealias KeepLiveCall = (service: Service) -> Unit
 
 object KeepLive {
     const val RECEIVER_KEEP_STOP = "_KEEP_STOP"
@@ -29,11 +30,20 @@ object KeepLive {
 
     var foregroundNotification: ForegroundNotification? = null
 
+    /**
+     * 通知栏点击的回调
+     * 这个放在Application里面，才能被回调
+     */
+    var notifyClickCall: ForegroundNotificationClickListener? = null
+
     //创建前提通知时候的回调，方便外部进行特殊设置
     var createNotificationCall: ((NotificationCompat.Builder) -> Unit)? = null
 
     //通知id
     var notificationId = 13691
+
+    //JobScheduler 的id
+    var jobId = 121
 
     /**
      * 运行中
@@ -55,7 +65,23 @@ object KeepLive {
 
 
     //是否开启守护进程 双进程保活，6.0之前
-    var remoteEnable = true
+    var remoteEnable = false
+
+    /**
+     * 每次服务创建是否检测start状态
+     * 如果不是start，就停止服务
+     */
+    var isCheckStart = true
+
+    /**
+     * 在Application 初始化
+     */
+    fun init(notificationClickListener: ForegroundNotificationClickListener): Unit {
+        this.notifyClickCall = notificationClickListener
+        if (!isStart) {
+
+        }
+    }
 
     /**
      * 创建foregroundNotification 对应的通知栏Builder

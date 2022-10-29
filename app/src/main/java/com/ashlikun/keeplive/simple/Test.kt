@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.ashlikun.keeplive.KeepLive
+import com.ashlikun.keeplive.utils.ServiceUtils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -33,6 +34,7 @@ class Test {
         GlobalScope.launch {
             while (true) {
                 count++
+//                ServiceUtils.isRunningTaskExist2(application!!, application!!.packageName)
                 KeepLive.createNot(application!!)?.apply {
                     setContentText("运行了：${count} S   ${application!!.activityStart}    ${application!!.appStart}")
                     manager.notify(KeepLive.notificationId, this.build())

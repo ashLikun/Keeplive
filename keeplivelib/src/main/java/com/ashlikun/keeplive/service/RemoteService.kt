@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.os.RemoteException
+import android.util.Log
 import com.ashlikun.keeplive.KeepLive
 import com.ashlikun.keeplive.config.KeepNotificationUtils.Companion.createNotification
 import com.ashlikun.keeplive.receiver.NotificationClickReceiver
@@ -23,12 +24,16 @@ class RemoteService : Service() {
     private var mIsBoundLocalService = false
     val stopReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            runCatching {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    stopForeground(KeepLive.notificationId)
-                }
-                stopSelf()
+            stop()
+        }
+    }
+
+    fun stop() {
+        runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                stopForeground(KeepLive.notificationId)
             }
+            stopSelf()
         }
     }
 
@@ -37,12 +42,18 @@ class RemoteService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.e("RemoteService ", "onStartCommand")
         registerReceiver(stopReceiver, IntentFilter().apply {
             addAction(KeepLive.RECEIVER_KEEP_STOP)
         })
         try {
             mIsBoundLocalService = this.bindService(Intent(this@RemoteService, LocalService::class.java), connection, BIND_ABOVE_CLIENT)
         } catch (e: Exception) {
+        }
+        if (!KeepLive.isStart) {
+            if (KeepLive.isCheckStart) {
+                stop()
+            }
         }
         return START_STICKY
     }

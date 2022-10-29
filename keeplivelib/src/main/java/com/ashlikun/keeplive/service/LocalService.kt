@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.*
 import android.media.MediaPlayer
 import android.os.*
+import android.util.Log
 import com.ashlikun.keeplive.KeepLive
 import com.ashlikun.keeplive.R
 import com.ashlikun.keeplive.receiver.NotificationClickReceiver
@@ -47,12 +48,16 @@ class LocalService : Service() {
 
     val stopReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            runCatching {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    stopForeground(KeepLive.notificationId)
-                }
-                stopSelf()
+            stop()
+        }
+    }
+
+    fun stop() {
+        runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                stopForeground(KeepLive.notificationId)
             }
+            stopSelf()
         }
     }
 
@@ -113,7 +118,14 @@ class LocalService : Service() {
             } catch (e: Exception) {
             }
         }
-        KeepLive.onWorkingCall?.invoke(this)
+        Log.e("LocalService ", "onStartCommand")
+        if (KeepLive.isStart) {
+            KeepLive.onWorkingCall?.invoke(this)
+        } else {
+            if (KeepLive.isCheckStart) {
+                stop()
+            }
+        }
         return START_STICKY
     }
 

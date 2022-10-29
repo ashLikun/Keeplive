@@ -3,7 +3,6 @@ package com.ashlikun.keeplive.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.ashlikun.keeplive.receiver.NotificationClickReceiver
 import com.ashlikun.keeplive.KeepLive
 
 /**
@@ -21,7 +20,7 @@ class NotificationClickReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent?.action == CLICK_NOTIFICATION) {
-            KeepLive.foregroundNotification?.clickListener?.invoke(context, intent)
+            KeepLive.notifyClickCall?.invoke(context, intent)
         }
     }
 }

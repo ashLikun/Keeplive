@@ -14,9 +14,10 @@ import java.io.Serializable
  */
 typealias ForegroundNotificationClickListener = (Context, Intent) -> Unit
 
-data class ForegroundNotification(var title: String = "",
+data class ForegroundNotification(
+    var title: String = "",
     var description: String = "",
     var iconRes: Int = 0,
-    var clickListener: ForegroundNotificationClickListener? = null) :
+) :
     Serializable {
 }

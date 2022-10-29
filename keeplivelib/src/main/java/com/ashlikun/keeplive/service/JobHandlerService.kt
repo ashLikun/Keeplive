@@ -11,6 +11,7 @@ import android.app.job.JobService
 import android.content.*
 import android.os.Build
 import android.os.Build.VERSION
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.ashlikun.keeplive.KeepLive
 import com.ashlikun.keeplive.utils.ServiceUtils
@@ -26,29 +27,33 @@ import com.ashlikun.keeplive.utils.ServiceUtils
 @RequiresApi(api = 21)
 class JobHandlerService : JobService() {
     private var mJobScheduler: JobScheduler? = null
-    private val jobId = 100
     val stopReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            runCatching {
-                mJobScheduler?.cancel(jobId)
-                mJobScheduler = null
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    stopForeground(KeepLive.notificationId)
-                }
-                stopSelf()
+            stop()
+        }
+    }
+
+    fun stop() {
+        runCatching {
+            mJobScheduler?.cancel(KeepLive.jobId)
+            mJobScheduler = null
+            if (VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                stopForeground(KeepLive.notificationId)
             }
+            stopSelf()
         }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         this.startService(this)
+        Log.e("JobHandlerService ", "onStartCommand")
         registerReceiver(stopReceiver, IntentFilter().apply {
             addAction(KeepLive.RECEIVER_KEEP_STOP)
         })
         if (VERSION.SDK_INT >= 21) {
             mJobScheduler = this.getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-            mJobScheduler!!.cancel(jobId)
-            val builder = JobInfo.Builder(jobId, ComponentName(this.packageName, JobHandlerService::class.java.name))
+            mJobScheduler!!.cancel(KeepLive.jobId)
+            val builder = JobInfo.Builder(KeepLive.jobId, ComponentName(this.packageName, JobHandlerService::class.java.name))
             if (VERSION.SDK_INT >= 24) {
                 //  表示任务在至少多长时间后执行，不能和setPeriodic 同时使用，否则报错
                 builder.setMinimumLatency(30000L)
@@ -70,6 +75,7 @@ class JobHandlerService : JobService() {
 
     private fun startService(context: Context) {
         if (KeepLive.isStart) {
+            Log.e("JobHandlerService ", "startService")
             //启用前台服务，提升优先级
             KeepLive.createNot(this)?.apply {
                 startForeground(KeepLive.notificationId, build())
@@ -77,12 +83,16 @@ class JobHandlerService : JobService() {
             this.startService(Intent(context, LocalService::class.java))
             if (KeepLive.remoteEnable)
                 this.startService(Intent(context, RemoteService::class.java))
+        } else {
+            if (KeepLive.isCheckStart) {
+                stop()
+            }
         }
     }
 
     override fun onStartJob(jobParameters: JobParameters?): Boolean {
         if (!ServiceUtils.isServiceRunning(this.applicationContext, LocalService::class.java.name) ||
-            !ServiceUtils.isRunningTaskExist(this.applicationContext, this.packageName + ":remote")
+            (KeepLive.remoteEnable && !ServiceUtils.isRunningTaskExist(this.applicationContext, this.packageName + ":remote"))
         ) {
             this.startService(this)
         }
@@ -91,7 +101,7 @@ class JobHandlerService : JobService() {
 
     override fun onStopJob(jobParameters: JobParameters?): Boolean {
         if (!ServiceUtils.isServiceRunning(this.applicationContext, LocalService::class.java.name) ||
-            !ServiceUtils.isRunningTaskExist(this.applicationContext, this.packageName + ":remote")
+            (KeepLive.remoteEnable && !ServiceUtils.isRunningTaskExist(this.applicationContext, this.packageName + ":remote"))
         ) {
             this.startService(this)
         }

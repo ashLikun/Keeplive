@@ -1,6 +1,7 @@
 package com.ashlikun.keeplive.simple
 
 import android.app.NotificationManager
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -42,11 +43,13 @@ class MainActivity : AppCompatActivity() {
 
         binding.textView.setOnClickListener {
             KeepLive.startWork(application, ForegroundNotification("测试Keep", "描述", R.mipmap.ic_launcher))
+            Test.get().start()
         }
         binding.textView2.setOnClickListener {
             KeepLive.stopWork(application)
         }
-
+//        KeepLive.startWork(application, ForegroundNotification("测试Keep", "描述", R.mipmap.ic_launcher))
+//        Test.get().start()
     }
 
 }
