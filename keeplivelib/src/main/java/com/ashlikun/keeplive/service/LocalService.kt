@@ -118,12 +118,14 @@ class LocalService : Service() {
             }
         }
         Log.e("LocalService ", "onStartCommand")
-        if (KeepLive.isStart) {
-            KeepLive.onWorkingCall?.invoke(this)
-        } else {
-            if (KeepLive.isCheckStart) {
+        if (KeepLive.isCheckStart) {
+            if (KeepLive.isStart) {
+                KeepLive.onWorkingCall?.invoke(this)
+            } else {
                 stop()
             }
+        } else {
+            KeepLive.onWorkingCall?.invoke(this)
         }
         return START_STICKY
     }
