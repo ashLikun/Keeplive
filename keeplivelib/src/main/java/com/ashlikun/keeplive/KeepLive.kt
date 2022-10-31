@@ -63,6 +63,9 @@ object KeepLive {
     //音乐是否重复播放流氓模式  相对耗电，但可造就不死之身
     var musiceReplay = true
 
+    //一个像素
+    var onepx = true
+
 
     //是否开启守护进程 双进程保活，6.0之前
     var remoteEnable = false

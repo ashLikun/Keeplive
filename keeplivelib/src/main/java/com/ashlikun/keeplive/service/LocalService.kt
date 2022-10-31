@@ -76,7 +76,7 @@ class LocalService : Service() {
                             if (KeepLive.musiceReplay) {
                                 play()
                             } else {
-                                handler.postDelayed({ play() }, 5000)
+                                handler.postDelayed({ play() }, 3000)
                             }
                         }
                     }
@@ -133,6 +133,7 @@ class LocalService : Service() {
     private fun play() {
         if (KeepLive.useSilenceMusice) {
             if (mediaPlayer?.isPlaying == false) {
+                Log.e("LocalService", "播放音乐")
                 mediaPlayer?.start()
             }
         }
@@ -141,6 +142,7 @@ class LocalService : Service() {
     private fun pause() {
         if (KeepLive.useSilenceMusice) {
             if (mediaPlayer?.isPlaying == true) {
+                Log.e("LocalService", "暂停播放音乐")
                 mediaPlayer?.pause()
             }
         }

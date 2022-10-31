@@ -1,14 +1,19 @@
 package com.ashlikun.keeplive.simple
 
+import android.app.Activity
 import android.app.Application
 import android.app.NotificationManager
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventCallback
+import android.hardware.SensorManager
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.ashlikun.keeplive.KeepLive
 import com.ashlikun.keeplive.utils.ServiceUtils
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.*
 
 /**
@@ -24,20 +29,47 @@ class Test {
         fun get(): Test = instance
     }
 
+    val sensorManager by lazy {
+        application!!.getSystemService(Activity.SENSOR_SERVICE) as SensorManager
+    }
+    val stepDetector by lazy {
+        sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+    }
     var count = 0
+    var steps = 0
     var application: MyApp? = null
     private val manager by lazy {
         application!!.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
     }
+    val sensorCall by lazy {
+        @RequiresApi(Build.VERSION_CODES.N)
+        object : SensorEventCallback() {
+            override fun onSensorChanged(event: SensorEvent) {
+                super.onSensorChanged(event)
+                if (event.values[0] == 1.0f) {
+                    steps++
+                }
+                Log.i("Test", "Detected step changes:" + event.values[0]);
 
-    fun start(): Unit {
+            }
+        }
+    }
+
+    fun start(call: (String) -> Unit): Unit {
+        if (Build.VERSION.SDK_INT >= 29) {
+            sensorManager.registerListener(sensorCall, stepDetector, 1000000)
+        }
         GlobalScope.launch {
             while (true) {
                 count++
+                val showText = "运行了：${count} S   ${application!!.activityStart}    ${application!!.appStart}  步数：${steps}"
 //                ServiceUtils.isRunningTaskExist2(application!!, application!!.packageName)
                 KeepLive.createNot(application!!)?.apply {
-                    setContentText("运行了：${count} S   ${application!!.activityStart}    ${application!!.appStart}")
+                    setContentText(showText)
                     manager.notify(KeepLive.notificationId, this.build())
+                }
+                withContext(Dispatchers.Main) {
+                    call(showText)
                 }
 //                binding.textView2.post {
 //                    binding.textView2.text = "开始时间：${startTime}\n" + "当前时间：${getFormatTime(Calendar.getInstance())}" + "\n" + "运行了：${count} S"
