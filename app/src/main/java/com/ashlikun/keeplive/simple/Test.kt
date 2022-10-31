@@ -8,6 +8,8 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventCallback
 import android.hardware.SensorManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +40,10 @@ class Test {
     var count = 0
     var steps = 0
     var application: MyApp? = null
+
+    val handle by lazy {
+        Handler(Looper.getMainLooper())
+    }
     private val manager by lazy {
         application!!.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
     }
@@ -54,11 +60,36 @@ class Test {
             }
         }
     }
+    var call: ((String) -> Unit)? = null
+    val run by lazy {
+        Runnable {
+            count++
+            val showText = "运行了：${count} S   ${application!!.activityStart}    ${application!!.appStart}  步数：${steps}"
+            //                ServiceUtils.isRunningTaskExist2(application!!, application!!.packageName)
+            KeepLive.createNot(application!!)?.apply {
+                setContentText(showText)
+                manager.notify(KeepLive.notificationId, this.build())
+            }
+            //            withContext(Dispatchers.Main) {
+            call?.invoke(showText)
+            //            }
+            //                binding.textView2.post {
+            //                    binding.textView2.text = "开始时间：${startTime}\n" + "当前时间：${getFormatTime(Calendar.getInstance())}" + "\n" + "运行了：${count} S"
+            //                }
+            Log.e("aaaaa", "${count}")
+            reRun()
+        }
+    }
+
+    private fun reRun() {
+        handle.postDelayed(run,1000)
+    }
 
     fun start(call: (String) -> Unit): Unit {
         if (Build.VERSION.SDK_INT >= 29) {
             sensorManager.registerListener(sensorCall, stepDetector, 1000000)
         }
+//        handle.post(run)
         GlobalScope.launch {
             while (true) {
                 count++
