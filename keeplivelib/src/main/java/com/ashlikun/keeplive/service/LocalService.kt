@@ -56,7 +56,11 @@ class LocalService : Service() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 stopForeground(KeepLive.notificationId)
             }
-            stopSelf()
+        }
+        runCatching { stopSelf() }
+        runCatching {
+            pause()
+            handler.removeCallbacksAndMessages(null)
         }
     }
 
@@ -68,7 +72,7 @@ class LocalService : Service() {
         if (KeepLive.useSilenceMusice) {
             //播放无声音乐
             if (mediaPlayer == null) {
-                mediaPlayer = MediaPlayer.create(this, R.raw.novioce)
+                mediaPlayer = MediaPlayer.create(this, R.raw.silent)
                 if (mediaPlayer != null) {
                     mediaPlayer!!.setVolume(0f, 0f)
                     mediaPlayer!!.setOnCompletionListener { mediaPlayer: MediaPlayer? ->
@@ -76,7 +80,7 @@ class LocalService : Service() {
                             if (KeepLive.musiceReplay) {
                                 play()
                             } else {
-                                handler.postDelayed({ play() }, 3000)
+                                handler.postDelayed({ play() }, KeepLive.musiceDelety)
                             }
                         }
                     }
@@ -158,7 +162,7 @@ class LocalService : Service() {
     private val connection = object : ServiceConnection {
         //方法onServiceDisconnected() 在连接正常关闭的情况下是不会被调用的, 该方法只在Service 被破坏了或者被杀死的时候调用. 例如, 系统资源不足, 要关闭一些Services, 刚好连接绑定的 Service 是被关闭者之一,  这个时候onServiceDisconnected() 就会被调用。
         override fun onServiceDisconnected(name: ComponentName?) {
-            if (ServiceUtils.isServiceRunning(applicationContext, LocalService::class.java.name)) {
+            if (KeepLive.remoteEnable && ServiceUtils.isServiceRunning(applicationContext, LocalService::class.java.name)) {
                 startService(Intent(this@LocalService, RemoteService::class.java))
                 mIsBoundRemoteService = bindService(Intent(this@LocalService, RemoteService::class.java), this, BIND_ABOVE_CLIENT)
             }

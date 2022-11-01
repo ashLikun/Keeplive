@@ -20,30 +20,30 @@ import com.ashlikun.keeplive.activity.OnePixelActivity
  */
 
 class OnepxReceiver : BroadcastReceiver() {
-    var mHander: Handler = Handler(Looper.getMainLooper())
+//    var mHander: Handler = Handler(Looper.getMainLooper())
     var screenOn = true
     override fun onReceive(context: Context, intent: Intent?) {
         //屏幕关闭的时候接受到广播
         if (intent?.action == Intent.ACTION_SCREEN_OFF) {
             screenOn = false
-            if (KeepLive.onepx) {
-                mHander.postDelayed({
-                    if (!screenOn) {
-                        try {
-                            PendingIntent.getActivity(
-                                context, 0,
-                                Intent(context, OnePixelActivity::class.java).apply {
-                                    addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                }, 0
-                            ).send()
-                            /*} catch (PendingIntent.CanceledException e) {*/
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    }
-                }, 1000)
-            }
+//            if (KeepLive.onepx) {
+//                mHander.postDelayed({
+//                    if (!screenOn) {
+//                        try {
+//                            PendingIntent.getActivity(
+//                                context, 0,
+//                                Intent(context, OnePixelActivity::class.java).apply {
+//                                    addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+//                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                                }, 0
+//                            ).send()
+//                            /*} catch (PendingIntent.CanceledException e) {*/
+//                        } catch (e: Exception) {
+//                            e.printStackTrace()
+//                        }
+//                    }
+//                }, 1000)
+//            }
             //通知屏幕已关闭，开始播放无声音乐
             context.sendBroadcast(Intent("_ACTION_SCREEN_OFF"))
         } else if (intent?.action == Intent.ACTION_SCREEN_ON) {

@@ -2,9 +2,10 @@ package com.ashlikun.keeplive.simple
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.*
+import android.os.Build
+import android.os.Bundle
+import android.os.PowerManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.ashlikun.keeplive.KeepLive
@@ -68,12 +69,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun start() {
-        KeepLive.startWork(application, ForegroundNotification("测试Keep", "描述", R.mipmap.ic_launcher))
-
-        if (!wakeLock.isHeld) {
-            //申请一个永久锁
-            wakeLock.acquire()
-        }
+        KeepLive.start(this, true, ForegroundNotification("测试Keep", "描述", R.mipmap.ic_launcher))
+//        if (!wakeLock.isHeld) {
+//            //申请一个永久锁
+//            wakeLock.acquire()
+//        }
         Test.get().start {
             binding.textView.text = it
         }

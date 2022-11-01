@@ -3,9 +3,17 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
+//    signingConfigs {
+//        release {
+//            storeFile file("./keystores/vinka.jks")
+//            storePassword "123456"
+//            keyAlias "vinka"
+//            keyPassword "123456"
+//        }
+//    }
     defaultConfig {
         applicationId "com.ashlikun.keeplive.simple"
+//        applicationId "com.vinka.drivesystem"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
@@ -19,7 +27,16 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.release
         }
+//        debug {
+//            //自定义属性   BuildConfig.LOG_DEBUG
+//            //buildConfigField "boolean", "LOG_DEBUG", "false"
+//            //构建的时候打印文本
+//            println 'build - debug'
+//            debuggable false
+////            signingConfig signingConfigs.release
+//        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

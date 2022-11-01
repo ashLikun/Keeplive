@@ -86,8 +86,9 @@ class Test {
     }
 
     fun start(call: (String) -> Unit): Unit {
+        this.call = call
         if (Build.VERSION.SDK_INT >= 29) {
-            sensorManager.registerListener(sensorCall, stepDetector, 1000000)
+//            sensorManager.registerListener(sensorCall, stepDetector, 1000000)
         }
 //        handle.post(run)
         GlobalScope.launch {

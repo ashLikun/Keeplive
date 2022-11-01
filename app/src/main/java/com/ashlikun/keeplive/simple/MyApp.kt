@@ -30,6 +30,7 @@ class MyApp : Application() {
         super.onCreate()
         appStart++
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 if (!activitys.contains(activity))
                     activitys.add(activity)

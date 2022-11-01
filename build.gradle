@@ -33,6 +33,6 @@ ext {
     designVersion = "com.google.android.material:material:" + superVersion
     targetSdkVersion = 26
     minSdkVersion = 21
-    versionCode = 1
-    versionName = "0.0.1"
+    versionCode = 202203041
+    versionName = "1.6.2"
 }
