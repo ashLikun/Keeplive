@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         getSystemService(Context.POWER_SERVICE) as PowerManager
     }
     val wakeLock by lazy {
-        pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KeepLive:WakeLock")
+        pm.newWakeLock(PowerManager.FULL_WAKE_LOCK , "KeepLive:WakeLock")
     }
 
 
@@ -56,12 +56,15 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     requestPermissions(arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), 111)
                 }
+            } else {
+                start()
             }
 
         }
         binding.textView2.setOnClickListener {
             KeepLive.stopWork(application)
-            wakeLock.release()
+            if (wakeLock.isHeld)
+                wakeLock.release()
         }
         KeepLive.foregroundNotification = ForegroundNotification("测试Keep", "描述", R.mipmap.ic_launcher)
 //        KeepLive.startWork(application, ForegroundNotification("测试Keep", "描述", R.mipmap.ic_launcher))
@@ -69,11 +72,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun start() {
-        KeepLive.start(this, true, ForegroundNotification("测试Keep", "描述", R.mipmap.ic_launcher))
-//        if (!wakeLock.isHeld) {
-//            //申请一个永久锁
-//            wakeLock.acquire()
-//        }
+        KeepLive.startIgnoreBattery(this, ForegroundNotification("测试Keep", "描述", R.mipmap.ic_launcher))
+        if (!wakeLock.isHeld) {
+            //申请一个永久锁
+            wakeLock.acquire()
+        }
         Test.get().start {
             binding.textView.text = it
         }

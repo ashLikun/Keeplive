@@ -51,8 +51,8 @@ private fun Context.isIgnoringBatteryOptimizations() = runCatching {
     val pm = applicationContext.getSystemService(Activity.POWER_SERVICE) as PowerManager
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         pm.isIgnoringBatteryOptimizations(packageName)
-    } else false
-}.getOrNull() ?: false
+    } else true
+}.getOrNull() ?: true
 
 /**
  * 忽略电池优化白名单

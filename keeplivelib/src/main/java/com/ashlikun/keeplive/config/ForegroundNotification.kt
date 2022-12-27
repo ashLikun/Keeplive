@@ -1,5 +1,6 @@
 package com.ashlikun.keeplive.config
 
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import java.io.Serializable
@@ -18,6 +19,8 @@ data class ForegroundNotification(
     var title: String = "",
     var description: String = "",
     var iconRes: Int = 0,
+    //优先级
+    var importance: Int = NotificationManager.IMPORTANCE_MIN,
 ) :
     Serializable {
 }

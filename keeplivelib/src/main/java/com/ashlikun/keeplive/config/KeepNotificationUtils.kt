@@ -23,20 +23,20 @@ class KeepNotificationUtils private constructor(private val context: Context) : 
     private val manager by lazy {
         getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
-    private val id: String = context.packageName
-    private val name: String = context.packageName
+    private val id: String = notId ?: "Keep:" + context.packageName
+    private val name: String = notName ?: "Keep:" + context.packageName
     private var channel: NotificationChannel? = null
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun createNotificationChannel() {
         if (channel == null) {
-            channel = NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH)
+            //运行后台优先级不需要高
+            channel = NotificationChannel(id, name, KeepLive.foregroundNotification?.importance ?: NotificationManager.IMPORTANCE_MIN)
                 .apply {
                     setShowBadge(false)
                     enableVibration(false)
                     enableLights(false)
                     enableVibration(false)
-                    importance = NotificationManager.IMPORTANCE_MIN
                     vibrationPattern = longArrayOf(0)
                     setSound(null, null)
                     manager!!.createNotificationChannel(this)
@@ -47,7 +47,9 @@ class KeepNotificationUtils private constructor(private val context: Context) : 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun getChannelNotification(title: String, content: String, icon: Int, intent: Intent): NotificationCompat.Builder {
         //PendingIntent.FLAG_UPDATE_CURRENT 这个类型才能传值
-        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_MUTABLE)
+        else PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         return NotificationCompat.Builder(context, id)
             .setContentTitle(title)
             .setContentText(content)
@@ -60,7 +62,9 @@ class KeepNotificationUtils private constructor(private val context: Context) : 
 
     fun getNotification_25(title: String, content: String, icon: Int, intent: Intent): NotificationCompat.Builder {
         //PendingIntent.FLAG_UPDATE_CURRENT 这个类型才能传值
-        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_MUTABLE)
+        else PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         return NotificationCompat.Builder(context, id)
             .setContentTitle(title)
             .setContentText(content)
@@ -72,6 +76,8 @@ class KeepNotificationUtils private constructor(private val context: Context) : 
     }
 
     companion object {
+        var notId: String? = null
+        var notName: String? = null
 
         @JvmStatic
         fun createNotification(context: Context, title: String, content: String, icon: Int, intent: Intent): NotificationCompat.Builder {
