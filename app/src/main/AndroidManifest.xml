@@ -36,6 +36,19 @@
         <activity
             android:name=".Main2Activity"
             android:theme="@style/AppTheme"></activity>
+
+        <activity
+            android:name="com.ashlikun.keeplive.simple.NotifyActivity"
+            android:exported="true"
+            android:taskAffinity=""
+            android:theme="@style/UtilsNotifyActivityTheme">
+            <intent-filter>
+                <action android:name="com.ashlikun.keeplive.simple.NotifyActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

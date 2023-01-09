@@ -9,8 +9,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import com.ashlikun.keeplive.KeepLive
-import com.ashlikun.keeplive.config.ForegroundNotification
-import com.ashlikun.keeplive.utils.ServiceUtils
 import kotlinx.coroutines.Job
 
 
@@ -59,12 +57,15 @@ class MyApp : Application() {
 
         })
         Test.get().init(this)
-
-        KeepLive.init { context, intent ->
-            startActivity(Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        NotifyActivity.onHandler = { context, intent ->
+            context.startActivity(Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             })
         }
+        KeepLive.init(Intent(this, NotifyActivity::class.java))
+//        KeepLive.init(Intent(this, MainActivity::class.java).apply {
+//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+//        })
         KeepLive.isCheckStart = false
         KeepLive.onWorkingCall = {
             Log.e("aaaa", "启动111")

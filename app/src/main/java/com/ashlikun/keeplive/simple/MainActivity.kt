@@ -2,10 +2,12 @@ package com.ashlikun.keeplive.simple
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.ashlikun.keeplive.KeepLive
@@ -24,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         getSystemService(Context.POWER_SERVICE) as PowerManager
     }
     val wakeLock by lazy {
-        pm.newWakeLock(PowerManager.FULL_WAKE_LOCK , "KeepLive:WakeLock")
+        pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "KeepLive:WakeLock")
     }
 
 
@@ -40,9 +42,13 @@ class MainActivity : AppCompatActivity() {
 
     var count = 0
     var startTime = ""
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Log.e("aaaaa", "onNewIntent")
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.e("aaaaa", "onCreate")
 
         setContentView(binding.root)
         startTime = getFormatTime(Calendar.getInstance())

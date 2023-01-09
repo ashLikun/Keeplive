@@ -48,8 +48,8 @@ class KeepNotificationUtils private constructor(private val context: Context) : 
     fun getChannelNotification(title: String, content: String, icon: Int, intent: Intent): NotificationCompat.Builder {
         //PendingIntent.FLAG_UPDATE_CURRENT 这个类型才能传值
         val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_MUTABLE)
-        else PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE)
+        else PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         return NotificationCompat.Builder(context, id)
             .setContentTitle(title)
             .setContentText(content)
@@ -63,8 +63,8 @@ class KeepNotificationUtils private constructor(private val context: Context) : 
     fun getNotification_25(title: String, content: String, icon: Int, intent: Intent): NotificationCompat.Builder {
         //PendingIntent.FLAG_UPDATE_CURRENT 这个类型才能传值
         val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_MUTABLE)
-        else PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE)
+        else PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         return NotificationCompat.Builder(context, id)
             .setContentTitle(title)
             .setContentText(content)

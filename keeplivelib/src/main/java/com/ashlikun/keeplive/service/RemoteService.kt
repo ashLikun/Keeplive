@@ -74,9 +74,7 @@ class RemoteService : Service() {
         override fun wakeUp(title: String, discription: String, iconRes: Int) {
             if (Build.VERSION.SDK_INT < 25) {
                 val notification = createNotification(this@RemoteService, title, discription, iconRes,
-                    Intent(applicationContext, NotificationClickReceiver::class.java).apply {
-                        action = NotificationClickReceiver.CLICK_NOTIFICATION
-                    })
+                    KeepLive.notifyClickIntent!!)
                 this@RemoteService.startForeground(KeepLive.notificationId, notification.build())
             }
         }

@@ -35,6 +35,7 @@ object KeepLive {
      * 这个放在Application里面，才能被回调
      */
     var notifyClickCall: ForegroundNotificationClickListener? = null
+    var notifyClickIntent: Intent? = null
 
     //创建前提通知时候的回调，方便外部进行特殊设置
     var createNotificationCall: ((NotificationCompat.Builder) -> Unit)? = null
@@ -82,11 +83,8 @@ object KeepLive {
     /**
      * 在Application 初始化
      */
-    fun init(notificationClickListener: ForegroundNotificationClickListener): Unit {
-        this.notifyClickCall = notificationClickListener
-        if (!isStart) {
-
-        }
+    fun init(notifyClickIntent: Intent): Unit {
+        this.notifyClickIntent = notifyClickIntent
     }
 
     /**
@@ -94,11 +92,13 @@ object KeepLive {
      * 前提foregroundNotification 不为null
      */
     fun createNot(context: Context) =
-        if (foregroundNotification == null) null else KeepNotificationUtils.createNotification(context,
+        if (foregroundNotification == null) null else KeepNotificationUtils.createNotification(
+            context,
             foregroundNotification!!.title,
             foregroundNotification!!.description,
             foregroundNotification!!.iconRes,
-            Intent(context.applicationContext, NotificationClickReceiver::class.java).apply { action = NotificationClickReceiver.CLICK_NOTIFICATION })
+            notifyClickIntent!!
+        )
 
     /**
      * 启动保活

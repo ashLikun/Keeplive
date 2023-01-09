@@ -14,11 +14,13 @@
 
     <application>
         <receiver android:name="com.ashlikun.keeplive.receiver.NotificationClickReceiver" />
+
         <activity
             android:name="com.ashlikun.keeplive.activity.OnePixelActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleInstance"
             android:theme="@style/onePixelActivity" />
+
 
         <service android:name="com.ashlikun.keeplive.service.LocalService" />
         <service
@@ -27,6 +29,8 @@
         <service
             android:name="com.ashlikun.keeplive.service.RemoteService"
             android:process=":remote" />
+
+
     </application>
 </manifest>
 

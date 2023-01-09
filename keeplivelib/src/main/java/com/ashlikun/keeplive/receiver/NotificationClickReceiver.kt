@@ -3,6 +3,7 @@ package com.ashlikun.keeplive.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.ashlikun.keeplive.KeepLive
 
 /**
@@ -22,5 +23,6 @@ class NotificationClickReceiver : BroadcastReceiver() {
         if (intent?.action == CLICK_NOTIFICATION) {
             KeepLive.notifyClickCall?.invoke(context, intent)
         }
+        Log.e("aaaa","1111111111")
     }
 }
