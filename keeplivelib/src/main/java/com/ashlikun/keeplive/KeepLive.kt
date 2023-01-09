@@ -10,9 +10,7 @@ import android.os.Process
 import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationCompat
 import com.ashlikun.keeplive.config.ForegroundNotification
-import com.ashlikun.keeplive.config.ForegroundNotificationClickListener
 import com.ashlikun.keeplive.config.KeepNotificationUtils
-import com.ashlikun.keeplive.receiver.NotificationClickReceiver
 import com.ashlikun.keeplive.service.JobHandlerService
 import com.ashlikun.keeplive.service.LocalService
 import com.ashlikun.keeplive.service.RemoteService
@@ -24,6 +22,7 @@ typealias KeepLiveCall = (service: Service) -> Unit
 
 object KeepLive {
     const val RECEIVER_KEEP_STOP = "_KEEP_STOP"
+    const val NOTIFY_TYPE = "KEEP_NOTIFY_TYPE"
 
     //保活是否运行
     var isStart = false
@@ -34,8 +33,11 @@ object KeepLive {
      * 通知栏点击的回调
      * 这个放在Application里面，才能被回调
      */
-    var notifyClickCall: ForegroundNotificationClickListener? = null
     var notifyClickIntent: Intent? = null
+        private set(value) {
+            value?.action = NOTIFY_TYPE
+            field = value
+        }
 
     //创建前提通知时候的回调，方便外部进行特殊设置
     var createNotificationCall: ((NotificationCompat.Builder) -> Unit)? = null
@@ -83,7 +85,7 @@ object KeepLive {
     /**
      * 在Application 初始化
      */
-    fun init(notifyClickIntent: Intent): Unit {
+    fun init(notifyClickIntent: Intent) {
         this.notifyClickIntent = notifyClickIntent
     }
 

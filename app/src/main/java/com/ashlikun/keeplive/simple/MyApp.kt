@@ -58,11 +58,14 @@ class MyApp : Application() {
         })
         Test.get().init(this)
         NotifyActivity.onHandler = { context, intent ->
+            Log.e("aaaa", intent.action.orEmpty())
             context.startActivity(Intent(this, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             })
         }
-        KeepLive.init(Intent(this, NotifyActivity::class.java))
+        KeepLive.init(Intent(this, NotifyActivity::class.java).also {
+
+        })
 //        KeepLive.init(Intent(this, MainActivity::class.java).apply {
 //            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
 //        })

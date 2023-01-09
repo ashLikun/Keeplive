@@ -9,7 +9,6 @@ import android.os.RemoteException
 import android.util.Log
 import com.ashlikun.keeplive.KeepLive
 import com.ashlikun.keeplive.config.KeepNotificationUtils.Companion.createNotification
-import com.ashlikun.keeplive.receiver.NotificationClickReceiver
 import com.ashlikun.keeplive.utils.ServiceUtils
 
 /**

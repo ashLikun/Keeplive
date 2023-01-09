@@ -13,7 +13,6 @@ import java.io.Serializable
  *
  * 功能介绍：默认前台服务样式
  */
-typealias ForegroundNotificationClickListener = (Context, Intent) -> Unit
 
 data class ForegroundNotification(
     var title: String = "",

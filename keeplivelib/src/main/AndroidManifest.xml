@@ -13,8 +13,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application>
-        <receiver android:name="com.ashlikun.keeplive.receiver.NotificationClickReceiver" />
-
         <activity
             android:name="com.ashlikun.keeplive.activity.OnePixelActivity"
             android:excludeFromRecents="true"
