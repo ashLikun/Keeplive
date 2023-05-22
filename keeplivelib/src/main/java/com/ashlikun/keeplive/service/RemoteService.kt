@@ -23,6 +23,7 @@ class RemoteService : Service() {
     private var mIsBoundLocalService = false
     val stopReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            Log.e("aaa","RemoteService 我接收了关闭通知")
             stop()
         }
     }

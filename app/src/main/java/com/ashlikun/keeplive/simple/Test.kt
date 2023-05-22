@@ -96,10 +96,10 @@ class Test {
                 count++
                 val showText = "运行了：${count} S   ${application!!.activityStart}    ${application!!.appStart}  步数：${steps}"
 //                ServiceUtils.isRunningTaskExist2(application!!, application!!.packageName)
-                KeepLive.createNot(application!!)?.apply {
-                    setContentText(showText)
-                    manager.notify(KeepLive.notificationId, this.build())
-                }
+//                KeepLive.createNot(application!!)?.apply {
+//                    setContentText(showText)
+//                    manager.notify(KeepLive.notificationId, this.build())
+//                }
                 withContext(Dispatchers.Main) {
                     call(showText)
                 }

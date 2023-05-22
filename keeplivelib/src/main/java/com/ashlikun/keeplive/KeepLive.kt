@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Process
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationCompat
 import com.ashlikun.keeplive.config.ForegroundNotification
@@ -83,6 +84,12 @@ object KeepLive {
     var isCheckStart = true
 
     /**
+     * 是否启动定时器服务
+     * 这里如果用户开启APP后台运行，那么APP会永远关不了(没有页面，但是有服务在运行)
+     */
+    var isStartJobHandler = false
+
+    /**
      * 在Application 初始化
      */
     fun init(notifyClickIntent: Intent) {
@@ -126,10 +133,11 @@ object KeepLive {
         application: Application,
         foregroundNotification: ForegroundNotification
     ) {
+        Log.e("KeepLive", "startWork")
         if (isMain(application)) {
             isStart = true
             KeepLive.foregroundNotification = foregroundNotification
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && isStartJobHandler) {
                 //启动定时器，在定时器中启动本地服务和守护进程
                 val intent = Intent(application, JobHandlerService::class.java)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -158,6 +166,18 @@ object KeepLive {
     fun stopWork(application: Application) {
         if (isMain(application)) {
             isStart = false
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && isStartJobHandler) {
+                //启动定时器，在定时器中启动本地服务和守护进程
+                val intent = Intent(application, JobHandlerService::class.java)
+                application.stopService(intent)
+            } else {
+                //启动本地服务
+                application.stopService(Intent(application, LocalService::class.java))
+                if (remoteEnable) {
+                    //启动守护进程
+                    application.stopService(Intent(application, RemoteService::class.java))
+                }
+            }
             //发送退出广播
             application.sendBroadcast(Intent(RECEIVER_KEEP_STOP))
         }

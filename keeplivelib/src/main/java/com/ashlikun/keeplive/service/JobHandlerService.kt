@@ -29,6 +29,7 @@ class JobHandlerService : JobService() {
     private var mJobScheduler: JobScheduler? = null
     val stopReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            Log.e("aaa","JobHandlerService 我接收了关闭通知")
             stop()
         }
     }

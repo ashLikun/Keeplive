@@ -19,6 +19,7 @@ import com.ashlikun.keeplive.utils.ServiceUtils
  * 功能介绍：本地进程
  */
 class LocalService : Service() {
+
     //像素保活
     private val mOnepxReceiver = OnepxReceiver()
 
@@ -43,10 +44,12 @@ class LocalService : Service() {
         super.onCreate()
         val pm = applicationContext.getSystemService(POWER_SERVICE) as PowerManager
         isPause = pm.isScreenOn
+        Log.e("LocalService", "onCreate")
     }
 
     val stopReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            Log.e("aaa", "LocalService 我接收了关闭通知")
             stop()
         }
     }
@@ -65,6 +68,7 @@ class LocalService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? {
+        Log.e("LocalService", "onBind")
         return mBilder
     }
 
@@ -95,6 +99,7 @@ class LocalService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.e("LocalService", "onStartCommand")
         registerReceiver(stopReceiver, IntentFilter().apply {
             addAction(KeepLive.RECEIVER_KEEP_STOP)
         })
@@ -121,7 +126,6 @@ class LocalService : Service() {
             } catch (e: Exception) {
             }
         }
-        Log.e("LocalService ", "onStartCommand")
         if (KeepLive.isCheckStart) {
             if (KeepLive.isStart) {
                 KeepLive.onWorkingCall?.invoke(this)
@@ -162,6 +166,7 @@ class LocalService : Service() {
     private val connection = object : ServiceConnection {
         //方法onServiceDisconnected() 在连接正常关闭的情况下是不会被调用的, 该方法只在Service 被破坏了或者被杀死的时候调用. 例如, 系统资源不足, 要关闭一些Services, 刚好连接绑定的 Service 是被关闭者之一,  这个时候onServiceDisconnected() 就会被调用。
         override fun onServiceDisconnected(name: ComponentName?) {
+            Log.e("LocalService", "onServiceDisconnected")
             if (KeepLive.remoteEnable && ServiceUtils.isServiceRunning(applicationContext, LocalService::class.java.name)) {
                 startService(Intent(this@LocalService, RemoteService::class.java))
                 mIsBoundRemoteService = bindService(Intent(this@LocalService, RemoteService::class.java), this, BIND_ABOVE_CLIENT)
@@ -172,6 +177,7 @@ class LocalService : Service() {
 
         //服务开启
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.e("LocalService", "onServiceConnected")
             try {
                 KeepLive.foregroundNotification?.apply {
                     val guardAidl = GuardAidl.Stub.asInterface(service)
@@ -185,6 +191,10 @@ class LocalService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        runCatching {
+            pause()
+        }
+        Log.e("LocalService", "onDestroy")
         try {
             if (mIsBoundRemoteService) {
                 unbindService(connection)

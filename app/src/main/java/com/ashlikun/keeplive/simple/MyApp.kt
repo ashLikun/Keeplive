@@ -70,6 +70,8 @@ class MyApp : Application() {
 //            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
 //        })
         KeepLive.isCheckStart = false
+        Log.e("aaaa", "启动APP")
+
         KeepLive.onWorkingCall = {
             Log.e("aaaa", "启动111")
             if (appRunStatus(this, false) == 2) {
